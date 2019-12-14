@@ -1,19 +1,19 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Text, View, Button, TouchableHighlight } from "react-native";
-import { getAuthData } from "../../reducer/action/auth-action";
+import LoginForm from "./LoginForm";
+import { getAuthData, AuthError } from "../../reducer/action/auth-action";
 
 class LoginFormContainer extends Component {
   state = {
     errorName: "",
     errorPassword: "",
-    username: "Timur",
-    password: "f1rstb1t"
+    username: "",
+    password: ""
   };
 
   validate = () => {
     let valid = true;
-
+    this.props.AuthError("");
     if (!this.state.username) {
       this.setState({ errorName: "Заполните Name" });
       valid = false;
@@ -27,18 +27,18 @@ class LoginFormContainer extends Component {
     return valid;
   };
 
-  handleSubmit = () => {
-    // if (this.validate()) {
-    this.props.getAuthData(this.state.username, this.state.password);
-    // }
+  handleSubmit = async () => {
+    if (this.validate()) {
+      await this.props.getAuthData(this.state.username, this.state.password);
+    }
   };
 
   InputChange = (text, type) => {
     switch (type) {
-      case "name":
+      case "Username":
         this.setState({ username: text });
         break;
-      case "age":
+      case "Password":
         this.setState({ password: text });
         break;
 
@@ -47,26 +47,26 @@ class LoginFormContainer extends Component {
     }
   };
 
-  componentDidMount() {
-    // this.props.getAuthData(this.state.username, this.state.password);
-  }
+  componentDidMount() {}
 
   render() {
     return (
-      <View style={{ marginTop: 100 }}>
-        <Button title="Create" onPress={this.handleSubmit} />
-      </View>
-      //   <CreateForm
-      //     InputChange={this.InputChange}
-      //     errors={this.state}
-      //     handleSubmit={this.handleSubmit}
-      //   />
+      <LoginForm
+        InputChange={this.InputChange}
+        data={this.state}
+        handleSubmit={this.handleSubmit}
+        authError={this.props.authError}
+      />
     );
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  authError: state.auth.authError,
+  isAuthorized: state.auth.isAuthorized
+});
 
 export default connect(mapStateToProps, {
-  getAuthData
+  getAuthData,
+  AuthError
 })(LoginFormContainer);

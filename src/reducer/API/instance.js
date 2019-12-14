@@ -1,12 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  // baseURL: "https://dashboard.uchet.kz/api/v1/",
-  headers: {
-    "Content-Type": "application/json"
-    // "tokenOperator": sessionStorage.getItem('tokenOperator'),
-    // "tokenAdmin" : sessionStorage.getItem('tokenAdmin')
-  }
+  baseURL: "https://dashboard.uchet.kz/api/v1/"
 });
 
 // instance.interceptors.request.use(function (config) {
